@@ -1,0 +1,82 @@
+class Category(models.Model):
+    RATING_CHOICES = (
+        (1, 1),
+        (2, 2),
+        (3, 3),
+        (4, 4),
+        (5, 5),
+        (6, 6),
+        (7, 7),
+        (8, 8),
+        (9, 9),
+        (10, 10)
+    )
+    name = models.CharField('Наименование столбца', max_length=50)
+    rating = models.PositiveSmallIntegerField('Рейтинг', choices=RATING_CHOICES, null=True, blank=True)
+
+    class Meta:
+        verbose_name = 'Категория'
+        verbose_name_plural = 'Категории'
+
+    def __str__(self):
+        return f'{self.name} - {self.rating}'
+
+
+
+
+def category_list(request):
+    categories = Category.objects.all()
+    return render(request, 'category_list.html', {'categories': categories})
+
+def category_detail(request, id):
+    category = Category.objects.get(id=id)
+    return render(request, 'category_detail.html', {'category': category})
+
+
+
+ca-detail
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ category.name }}</title>
+</head>
+<body>
+    <h1>{{ category.name }}</h1>
+    <p>{{ category.rating }}</p>
+    <!-- Add any other fields you want to display -->
+</body>
+</html>
+
+
+ca-list
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Category List</title>
+</head>
+<body>
+    <h1>Category List</h1>
+    <ul>
+        {% for category in categories %}
+            <li><a href="{% url 'category-detail' category.id %}">{{ category.name }}</a></li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
+
+
+
+path('categories/', category_list, name='category-list'),
+    path('categories/<int:id>/', category_detail, name='category-detail'),
+
+
+
+
+
+
+
+
+
+
+
+
